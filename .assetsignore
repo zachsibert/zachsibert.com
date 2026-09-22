@@ -1,0 +1,15 @@
+# Files in this repository that are not part of the site. wrangler reads this
+# file from the assets directory (the repository root) and skips these paths
+# when it uploads the site. Same syntax as .gitignore.
+.git
+.gitignore
+.claude
+.wrangler
+node_modules
+.DS_Store
+.assetsignore
+wrangler.jsonc
+README.md
+AGENTS.md
+CLAUDE.md
+docs/

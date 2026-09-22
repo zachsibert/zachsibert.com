@@ -4,7 +4,7 @@ This file is the project's committed home for project-intrinsic agent knowledge:
 
 ## What this is
 
-A one-page static site about firstmate-tui, served by Cloudflare Pages from the repository root with no build command. `README.md` lists the files and the Cloudflare settings.
+A one-page static site about firstmate-tui, deployed as a Cloudflare Worker that serves the repository root as static assets: `wrangler.jsonc` has no `main`, and Workers Builds runs `npx wrangler deploy` with no build command. `README.md` lists the files, the Cloudflare settings and how to switch to Pages.
 
 ## Rules that are easy to break
 
@@ -12,6 +12,7 @@ A one-page static site about firstmate-tui, served by Cloudflare Pages from the 
 - The only JavaScript is the inline copy button at the foot of `index.html`. The page must render fully with it disabled: the button starts `hidden` and JavaScript reveals it.
 - ASCII only in source. Check: `LC_ALL=C grep -nP '[^\x00-\x7F]' index.html assets/site.css README.md` prints nothing.
 - Do not name an employer, a client, or any real company in copy or in the mock board rows. Fictional task ids and first names only.
+- A new file that is not part of the site (notes, screenshots, config) goes into `.assetsignore`, or wrangler uploads it.
 - `assets/fm-board.png` is copied from `docs/fm-board.png` in the firstmate-tui repository. Refresh it from there rather than editing it.
 
 ## Verify before a PR
