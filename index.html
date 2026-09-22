@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>firstmate-tui - a terminal board over your coding agents | Zach Sibert</title>
+  <meta name="description" content="firstmate-tui is a live terminal board over the work your coding agents are doing and the pull requests waiting on you. Six panes, one screen, keyboard driven. Built by Zach Sibert.">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#f6f1e6" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#14141b" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://zachsibert.com/">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/site.css">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="firstmate-tui - a terminal board over your coding agents">
+  <meta property="og:description" content="Six panes, one screen. What needs you, what is underway, your pull requests, your teammates' pull requests, what is queued, what landed.">
+  <meta property="og:url" content="https://zachsibert.com/">
+  <meta property="og:image" content="https://zachsibert.com/assets/fm-board.png">
+  <meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="wrap site-head">
+    <a class="brand" href="/">
+      <svg viewBox="0 0 11 12" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M4 0h3v1h-3zM4 1h1v1h-1zM6 1h1v1h-1zM4 2h3v1h-3zM5 3h1v1h-1zM2 4h7v1h-7zM5 5h1v1h-1zM5 6h1v1h-1zM0 7h1v1h-1zM5 7h1v1h-1zM10 7h1v1h-1zM0 8h1v1h-1zM5 8h1v1h-1zM10 8h1v1h-1zM1 9h1v1h-1zM5 9h1v1h-1zM9 9h1v1h-1zM2 10h2v1h-2zM5 10h1v1h-1zM7 10h2v1h-2zM3 11h5v1h-5z"/></svg>
+      zachsibert.com
+    </a>
+    <nav class="site-nav" aria-label="Sections">
+      <ul>
+        <li><a href="#panes">Panes</a></li>
+        <li><a href="#keys">Keys</a></li>
+        <li><a href="#fits">How it fits</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="https://github.com/zachsibert/firstmate-tui">GitHub</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+
+    <section class="wrap hero" aria-labelledby="title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="tag">v0.7.1</span> a terminal board for coding agents</p>
+        <h1 id="title">firstmate-tui<span class="cursor" aria-hidden="true"></span></h1>
+        <p class="pitch">One live board over everything your coding agents are doing, and every pull request waiting on you.</p>
+
+        <div class="install">
+          <div class="install-bar">
+            <span>install the latest release</span>
+            <button class="copy" id="copy" type="button" hidden>copy</button>
+          </div>
+          <pre><code id="cmd"><span class="prompt">$ </span>curl -fsSL https://raw.githubusercontent.com/<wbr>zachsibert/<wbr>firstmate-tui/<wbr>main/<wbr>bin/<wbr>install.sh | bash</code></pre>
+        </div>
+        <p class="install-note">It fetches the release tarball, checks the checksum, and writes the command. It never touches your shell profile.</p>
+
+        <div class="actions">
+          <a class="btn btn-amber" href="https://github.com/zachsibert/firstmate-tui">Source on GitHub</a>
+          <a class="btn" href="https://github.com/zachsibert/firstmate-tui/releases">Releases</a>
+        </div>
+      </div>
+
+      <div class="board" role="img" aria-label="A drawing of the firstmate-tui board: six bordered panes stacked in a dark terminal, from Captain's Call at the top to Recently Landed at the bottom. The third pane, My PRs, has the amber focused border and a white selected row. The bottom line lists the keys.">
+        <div class="board-title"><span>firstmate-tui | ~/firstmate | 3 homes</span><span>next refresh in 18s</span></div>
+
+        <div class="pane">
+          <div class="pane-t">[1] Captain's Call (2)</div>
+          <div class="row head"><span>STATE</span><span>ID</span><span>WHAT</span><span class="r">AGE</span></div>
+          <div class="row"><span class="c-amber">decide</span><span>!site-hero-copy</span><span>pick a tagline: a. one board b. six panes</span><span class="r">4m</span></div>
+          <div class="row"><span>review</span><span>firstmate-tui#88</span><span>installer: verify the checksum on Linux</span><span class="r">1h</span></div>
+        </div>
+
+        <div class="pane">
+          <div class="pane-t">[2] Underway (3)</div>
+          <div class="row head"><span>STATE</span><span>ID</span><span>WHAT</span><span class="r">AGE</span></div>
+          <div class="row"><span class="c-green">working</span><span>site-v1</span><span>writing the six-pane section</span><span class="r">12m</span></div>
+          <div class="row"><span class="c-green">working</span><span>keys-help</span><span>drawing the help overlay</span><span class="r">41m</span></div>
+          <div class="row"><span class="c-dim">paused</span><span>docs-refresh</span><span>waiting on the release</span><span class="r">2h</span></div>
+        </div>
+
+        <div class="pane focus">
+          <div class="pane-t">[3] My PRs (2)</div>
+          <div class="row head"><span>CHECKS</span><span>ID</span><span>TITLE</span><span class="r">AGE</span></div>
+          <div class="row sel"><span>passing</span><span>firstmate-tui#91</span><span>search: rank matches by pane</span><span class="r">22m</span></div>
+          <div class="row"><span class="c-amber">pending</span><span>firstmate-tui#90</span><span>cache: mark panes (cached 12m ago)</span><span class="r">3h</span></div>
+        </div>
+
+        <div class="pane">
+          <div class="pane-t">[4] Teammates' PRs (2)</div>
+          <div class="row head"><span>CHECKS</span><span>AUTHOR</span><span>TITLE</span><span class="r">AGE</span></div>
+          <div class="row"><span>passing</span><span>pat</span><span>fix: bound the snapshot timeout</span><span class="r">1h</span></div>
+          <div class="row"><span class="c-amber">pending</span><span>sam</span><span>feat: resize a column by dragging</span><span class="r">1d</span></div>
+        </div>
+
+        <div class="pane">
+          <div class="pane-t">[5] Charted Next (2)</div>
+          <div class="row head"><span>STATE</span><span>ID</span><span>WHY</span><span class="r">FILED</span></div>
+          <div class="row"><span>dated</span><span>key-rebind-rfc</span><span>until 10-06</span><span class="r">09-19</span></div>
+          <div class="row"><span class="c-red">blocked</span><span>narrow-mode</span><span>by site-v1</span><span class="r">09-21</span></div>
+        </div>
+
+        <div class="pane">
+          <div class="pane-t">[6] Recently Landed (3)</div>
+          <div class="row head"><span>VERB</span><span>ID</span><span>WHAT</span><span class="r">AGE</span></div>
+          <div class="row"><span>merged</span><span>firstmate-tui#87</span><span>amber border on the focused pane</span><span class="r">1d</span></div>
+          <div class="row"><span>answered</span><span>hero-copy</span><span>option b: six panes, one screen</span><span class="r">2d</span></div>
+          <div class="row"><span>report</span><span>notes-0919</span><span>data/notes-0919/report.md</span><span class="r">3d</span></div>
+        </div>
+
+        <div class="board-keys"><b>a</b> accept  <b>d</b> discard  <b>D</b> defer  <b>f</b> search  <b>.</b> settings  <b>j/k</b> move  <b>tab</b> pane  <b>enter</b> open  <b>?</b> help  <b>q</b> quit</div>
+      </div>
+    </section>
+
+    <section class="section" id="panes" aria-labelledby="panes-h">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="num">01</span>
+          <h2 id="panes-h">Six panes. One screen.</h2>
+        </div>
+        <p class="lede">Each pane answers one question, and each has a number key. Press it to show or hide the pane. Every row is one scannable line, and a hold you set appears in exactly one place.</p>
+        <ol class="panes">
+          <li class="card">
+            <span class="key" aria-hidden="true">1</span>
+            <h3>Captain's Call</h3>
+            <p>What needs your own hand right now: the live holds you set, decisions an agent asked for, blocked agents, and pull requests that are yours to review. Nothing lands here unless it needs you.</p>
+          </li>
+          <li class="card">
+            <span class="key" aria-hidden="true">2</span>
+            <h3>Underway</h3>
+            <p>One row per live agent, from every home, with what it is doing and whether its terminal pane is still alive. Finished work never lingers here.</p>
+          </li>
+          <li class="card">
+            <span class="key" aria-hidden="true">3</span>
+            <h3>My PRs</h3>
+            <p>Every open pull request you authored, plus the ones recorded on unfinished tasks, with checks judged from the newest run of each check so a superseded failure does not count.</p>
+          </li>
+          <li class="card">
+            <span class="key" aria-hidden="true">4</span>
+            <h3>Teammates' PRs</h3>
+            <p>The open pull requests where you are a requested reviewer and not the author, filtered by the label rules you set per repository.</p>
+          </li>
+          <li class="card">
+            <span class="key" aria-hidden="true">5</span>
+            <h3>Charted Next</h3>
+            <p>Queued and gated work with the reason it waits: behind another task, deferred to a date, or held from outside. Warnings come first and are never counted.</p>
+          </li>
+          <li class="card">
+            <span class="key" aria-hidden="true">6</span>
+            <h3>Recently Landed</h3>
+            <p>What shipped and what was written: merged pull requests, done tasks, the holds you answered, and every report an agent left behind, newest first.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section" id="keys" aria-labelledby="keys-h">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="num">02</span>
+          <h2 id="keys-h">Hands stay on the keyboard.</h2>
+        </div>
+        <p class="lede">The board is read-only, with three exceptions: accept a hold, discard it, or defer it. Each one asks for your words or your confirmation first, then runs the supervisor's own command. The board never merges anything. That part is still yours.</p>
+        <ul class="keys">
+          <li>
+            <kbd class="cap">a</kbd>
+            <div>
+              <h3>Accept</h3>
+              <p>The grid gives way to the hold's card so the full reason is in view. Pick an option by its letter, or type a line of your own. Enter records it and the row leaves the board.</p>
+            </div>
+          </li>
+          <li>
+            <kbd class="cap">d</kbd>
+            <div>
+              <h3>Discard</h3>
+              <p>One y to confirm. The task closes as not wanted, the cursor moves to the next row, and a refresh follows so the supervisor's state catches up.</p>
+            </div>
+          </li>
+          <li>
+            <kbd class="cap">D</kbd>
+            <div>
+              <h3>Defer</h3>
+              <p>Type a date, prefilled with today plus two weeks. The row leaves Captain's Call at once and comes back in Charted Next marked dated.</p>
+            </div>
+          </li>
+          <li>
+            <kbd class="cap">f</kbd>
+            <div>
+              <h3>Search</h3>
+              <p>Every pane at once, the way quick open works in an editor. A few letters in any order, best match first. Enter jumps to the row in its pane.</p>
+            </div>
+          </li>
+          <li>
+            <kbd class="cap">.</kbd>
+            <div>
+              <h3>Settings</h3>
+              <p>The running version and where it lives, the latest release, an upgrade in place, a list of betas by commit, and a way back to stable. Only y runs anything.</p>
+            </div>
+          </li>
+          <li>
+            <kbd class="cap">?</kbd>
+            <div>
+              <h3>Help</h3>
+              <p>Every key on one overlay. The bottom line of the board keeps the short list in view the whole time.</p>
+            </div>
+          </li>
+        </ul>
+        <p class="more-keys">
+          <span><kbd>j</kbd><kbd>k</kbd>move</span>
+          <span><kbd>tab</kbd>next pane</span>
+          <span><kbd>enter</kbd>open, focus, or view</span>
+          <span><kbd>1</kbd>to<kbd>6</kbd>show or hide a pane</span>
+          <span><kbd>x</kbd>hide a row</span>
+          <span><kbd>r</kbd>refresh now</span>
+          <span><kbd>q</kbd>quit</span>
+        </p>
+      </div>
+    </section>
+
+    <section class="section" id="fits" aria-labelledby="fits-h">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="num">03</span>
+          <h2 id="fits-h">A board over a fleet.</h2>
+        </div>
+        <p class="lede">firstmate is a supervisor that runs coding agents from a checkout on your machine and keeps its state on disk. herdr is the terminal multiplexer those agents run in. firstmate-tui sits over both and puts what they know on one screen that refreshes itself.</p>
+        <div class="fits">
+          <div class="card">
+            <h3><span>reads</span>the state on disk</h3>
+            <ul>
+              <li>The main home, and every delegate home it lists.</li>
+              <li>Holds, decisions, queued work, reports.</li>
+              <li>Nothing is written back except through the supervisor's own command.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3><span>asks</span>two outside sources</h3>
+            <ul>
+              <li>GitHub, for your pull requests and their checks.</li>
+              <li>herdr, for which agent panes are still alive.</li>
+              <li>Both without holding up the rest of the board.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3><span>never</span>gets ahead of you</h3>
+            <ul>
+              <li>Never edits a supervisor file itself.</li>
+              <li>Never answers a question with words of its own.</li>
+              <li>Never merges anything.</li>
+            </ul>
+          </div>
+        </div>
+        <dl class="facts">
+          <div>
+            <dt>Refresh in two beats</dt>
+            <dd>The fleet snapshot lands and four panes repaint at once. The GitHub fetch starts on its own and the two pull request panes repaint when it returns. A slow GitHub never delays the fleet.</dd>
+          </div>
+          <div>
+            <dt>Second launch is instant</dt>
+            <dd>The board draws what it showed last time, each pane marked cached until live data lands, and puts the cursor back on the row you were on.</dd>
+          </div>
+          <div>
+            <dt>Ships as a release</dt>
+            <dd>Every merge is a GitHub Release with a checksum. Upgrade from the Settings page. Betas are published from any branch and named by commit, so you can try one exact change.</dd>
+          </div>
+          <div>
+            <dt>Fits a narrow terminal</dt>
+            <dd>Wide columns drop first. Below 80 columns the six panes become one scrolling list with section headers.</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="section" id="board" aria-labelledby="board-h">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="num">04</span>
+          <h2 id="board-h">The real thing.</h2>
+        </div>
+        <figure class="shot">
+          <div class="frame">
+            <img src="assets/fm-board.png" width="2000" height="1134" loading="lazy" decoding="async" alt="The firstmate-tui board filling a dark terminal. A title line names the tool, the fleet directory and the number of homes, with the next refresh countdown at the right. Six bordered panes stack below it, each titled with its number key and a row count. The focused pane has an amber border and its first row is highlighted white. The bottom line lists the keys.">
+          </div>
+          <figcaption>A board from the 0.6 series, before the panes took their current names. Same shape: six panes top to bottom, the focused one in amber, the selected row in white, the keys along the bottom.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section" id="about" aria-labelledby="about-h">
+      <div class="wrap about">
+        <div class="avatar" aria-hidden="true">ZS</div>
+        <div>
+          <h2 id="about-h">Zach Sibert</h2>
+          <p class="role">software engineer</p>
+          <p>I run a small fleet of coding agents and got tired of scrolling back through chat to find out where things stand. firstmate-tui is the board I wanted: one screen, six questions answered, and nothing done on my behalf without my say.</p>
+          <p><a href="https://github.com/zachsibert">github.com/zachsibert</a></p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="wrap site-foot">
+    <ul>
+      <li><a href="https://github.com/zachsibert/firstmate-tui">firstmate-tui on GitHub</a></li>
+      <li><a href="https://github.com/zachsibert/zachsibert.com">this site's source</a></li>
+      <li>2026 Zach Sibert</li>
+    </ul>
+  </footer>
+
+  <script>
+    (function () {
+      var b = document.getElementById("copy"), c = document.getElementById("cmd");
+      if (!b || !c || !navigator.clipboard) { return; }
+      b.hidden = false;
+      b.addEventListener("click", function () {
+        var t = c.textContent.replace(/^\s*\$\s*/, "").trim();
+        navigator.clipboard.writeText(t).then(function () {
+          b.textContent = "copied";
+          setTimeout(function () { b.textContent = "copy"; }, 1600);
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
