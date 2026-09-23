@@ -1,8 +1,9 @@
 {
   // zachsibert.com deploys as a Cloudflare Worker that serves this repository
-  // as static assets. There is no Worker script and no build step: Workers
-  // Builds runs "npx wrangler deploy" on every push, and wrangler uploads the
-  // files here except the ones listed in .assetsignore.
+  // as static assets. There is no Worker script and no build step. The GitHub
+  // Actions workflow in .github/workflows/deploy.yml runs "wrangler deploy" on
+  // every push to main, and wrangler uploads the files here except the ones
+  // listed in .assetsignore.
   "$schema": "https://developers.cloudflare.com/schemas/wrangler.json",
   "name": "zachsibert-com",
   "compatibility_date": "2026-09-22",
@@ -11,6 +12,20 @@
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "404-page"
   },
-  // Workers Builds runs "npx wrangler preview" for every branch other than main, and that command refuses to run without this block.
+  // Custom Domains. On deploy, Cloudflare creates the DNS records for these
+  // hostnames on the zachsibert.com zone, issues their certificates, and points
+  // them straight at this Worker. Each hostname must have no DNS record of its
+  // own before the first deploy, or Cloudflare refuses to attach it.
+  "routes": [
+    { "pattern": "zachsibert.com", "custom_domain": true },
+    { "pattern": "www.zachsibert.com", "custom_domain": true }
+  ],
+  // Keep the zachsibert-com.<account>.workers.dev address as well, so the site
+  // has a fallback address that does not depend on the zone.
+  "workers_dev": true,
+  // Previews: the per-pull-request copies of the Worker that the workflow
+  // creates with "wrangler preview". This block holds the settings a Preview
+  // needs that differ from production. The site has none, but the block must
+  // exist or the command refuses to run.
   "previews": {}
 }
