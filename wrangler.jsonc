@@ -10,5 +10,7 @@
     "directory": "./",
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "404-page"
-  }
+  },
+  // Workers Builds runs "npx wrangler preview" for every branch other than main, and that command refuses to run without this block.
+  "previews": {}
 }
