@@ -22,6 +22,7 @@ A one-page static site about firstmate-tui, deployed as a Cloudflare Worker that
 - Check 360, 768 and 1280 px in both color schemes: `document.documentElement.scrollWidth` must equal `innerWidth`.
 - First load stays under 100 KB excluding the screenshot.
 - `npx wrangler deploy --dry-run` must pass after any change to `wrangler.jsonc` or `.assetsignore`; it needs no credentials and prints the asset list at `WRANGLER_LOG=debug`. Run `actionlint` on `.github/workflows/deploy.yml` after editing it.
+- Every pull request gets a live Preview at the address in the workflow's sticky comment; use it for browser checks. It answers a missing path with a plain `Not found`, so check the 404 page with `npx wrangler dev` or on production.
 
 ## Maintaining this file
 
