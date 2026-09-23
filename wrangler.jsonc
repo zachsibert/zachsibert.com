@@ -1,0 +1,16 @@
+{
+  // zachsibert.com deploys as a Cloudflare Worker that serves this repository
+  // as static assets. There is no Worker script and no build step: Workers
+  // Builds runs "npx wrangler deploy" on every push, and wrangler uploads the
+  // files here except the ones listed in .assetsignore.
+  "$schema": "https://developers.cloudflare.com/schemas/wrangler.json",
+  "name": "zachsibert-com",
+  "compatibility_date": "2026-09-22",
+  "assets": {
+    "directory": "./",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  },
+  // Workers Builds runs "npx wrangler preview" for every branch other than main, and that command refuses to run without this block.
+  "previews": {}
+}
