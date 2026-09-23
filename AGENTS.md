@@ -4,7 +4,7 @@ This file is the project's committed home for project-intrinsic agent knowledge:
 
 ## What this is
 
-A one-page static site about firstmate-tui, deployed as a Cloudflare Worker that serves the repository root as static assets: `wrangler.jsonc` has no `main`, and Workers Builds runs `npx wrangler deploy` with no build command. `README.md` lists the files, the Cloudflare settings and how to switch to Pages.
+A one-page static site about firstmate-tui, deployed as a Cloudflare Worker that serves the repository root as static assets: `wrangler.jsonc` has no `main`. `.github/workflows/deploy.yml` owns every deploy: `wrangler deploy` on a push to `main`, a per-pull-request Cloudflare Preview otherwise, deleted when the pull request closes. `README.md` lists the files, what runs when, the one-time credential setup and how to switch to Pages.
 
 ## Rules that are easy to break
 
@@ -21,6 +21,8 @@ A one-page static site about firstmate-tui, deployed as a Cloudflare Worker that
 - Lighthouse on a local server (`python3 -m http.server 8765`) should score 100 in every category on desktop and mobile. `chrome-devtools-axi lighthouse` works when its bridge is healthy; otherwise install `lighthouse` in a scratch directory and point `CHROME_PATH` at a Chrome binary.
 - Check 360, 768 and 1280 px in both color schemes: `document.documentElement.scrollWidth` must equal `innerWidth`.
 - First load stays under 100 KB excluding the screenshot.
+- `npx wrangler deploy --dry-run` must pass after any change to `wrangler.jsonc` or `.assetsignore`; it needs no credentials and prints the asset list at `WRANGLER_LOG=debug`. Run `actionlint` on `.github/workflows/deploy.yml` after editing it.
+- Every pull request gets a live Preview at the address in the workflow's sticky comment; use it for browser checks. It answers a missing path with a plain `Not found`, so check the 404 page with `npx wrangler dev` or on production.
 
 ## Maintaining this file
 

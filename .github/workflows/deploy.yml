@@ -1,0 +1,120 @@
+# Deploys zachsibert.com to Cloudflare Workers.
+#
+# push to main:  "wrangler deploy" publishes production and attaches the Custom
+#                Domains listed in wrangler.jsonc. Only this job changes what
+#                https://zachsibert.com/ serves.
+# pull_request:  "wrangler preview" creates or updates a Preview named after the
+#                pull request: an isolated copy of the Worker with the branch's
+#                files, on its own workers.dev address that stays the same for
+#                every push. One comment on the pull request carries the
+#                address and is edited in place. When the pull request closes,
+#                the Preview is deleted.
+#
+# Only pull requests get Previews. A branch with no open pull request is never
+# deployed anywhere.
+#
+# Credentials: the repository secret CLOUDFLARE_API_TOKEN and the repository
+# variable CLOUDFLARE_ACCOUNT_ID. Until both exist the deploy job fails at
+# authentication, which is expected. Secrets are withheld from pull requests
+# opened from forks, so those get no Preview.
+#
+# The deploy job uses cloudflare/wrangler-action. The Preview jobs run wrangler
+# directly, the way Cloudflare's Previews guide does, because the action's v4
+# tag does not expose the Preview address as an output.
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+
+permissions:
+  contents: read
+
+# One run per branch or pull request at a time. A second push queues behind
+# the first instead of racing it.
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy
+
+  preview:
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.action != 'closed' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      pull-requests: write
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+      PREVIEW_NAME: pr-${{ github.event.pull_request.number }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - name: Create or update the Preview
+        id: preview
+        env:
+          # wrangler appends one JSON object per line here; the "preview" entry
+          # carries the addresses.
+          WRANGLER_OUTPUT_FILE_PATH: ${{ runner.temp }}/wrangler-preview.ndjson
+        run: |
+          npx --yes wrangler@4 preview --name "$PREVIEW_NAME"
+          url="$(jq -er 'select(.type == "preview") | .preview_urls[0]' "$WRANGLER_OUTPUT_FILE_PATH")"
+          deployment="$(jq -r 'select(.type == "preview") | .deployment_urls[0] // empty' "$WRANGLER_OUTPUT_FILE_PATH")"
+          echo "Preview: $url"
+          echo "This deployment: ${deployment:-n/a}"
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+      - name: Comment the Preview address on the pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+          URL: ${{ steps.preview.outputs.url }}
+          SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          {
+            echo "Preview of this pull request: $URL"
+            echo
+            echo "Built from ${SHA:0:7}. The address stays the same for every push to this pull request, and the Preview is deleted when the pull request closes. Production at https://zachsibert.com/ is untouched."
+          } > "$RUNNER_TEMP/comment.md"
+          gh pr comment "$PR" --edit-last --create-if-none --body-file "$RUNNER_TEMP/comment.md"
+
+  cleanup:
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.action == 'closed' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+      PREVIEW_NAME: pr-${{ github.event.pull_request.number }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - name: Delete the Preview
+        run: npx --yes wrangler@4 preview delete --name "$PREVIEW_NAME" --skip-confirmation
